@@ -1,8 +1,9 @@
 ﻿@page "/"
 @using System.Drawing
 @using BlazorLeaflet.Models
-@inject CityService cityService
-@inject IJSRuntime jsRuntime
+
+@*@inject CityService cityService
+@inject IJSRuntime jsRuntime*@
 
 <h1>Blazor Leaflet</h1>
 
@@ -20,7 +21,7 @@
     <LeafletMap Map="_map" />
 </div>
 
-@code
+@*@code
 {
 
     private Map _map;
@@ -110,4 +111,4 @@
         _map.PanTo(new PointF(40.713185f, -74.0072333f), animate: true, duration: 10f);
     }
 
-}
+}*@

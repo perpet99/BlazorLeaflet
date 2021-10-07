@@ -23,7 +23,12 @@ namespace BlazorLeaflet.Samples.Data
         readonly IJSRuntime _jsRuntime;
         readonly Rectangle _rectangle = new Rectangle();
         readonly Circle _circle = new Circle();
-        readonly Polygon _polygon = new Polygon();
+        readonly Polyline _polygon = new Polyline();
+
+        
+
+        //readonly Polyline _polyline = new Polyline();
+
         readonly List<MouseEvent> _mouseClickEvents = new List<MouseEvent>();
         DrawState _drawState;
 
@@ -45,8 +50,8 @@ namespace BlazorLeaflet.Samples.Data
 
             _polygon.StrokeColor = Color.Black;
             _polygon.StrokeWidth = 1;
-            _polygon.Fill = true;
-            _polygon.FillColor = Color.Red;
+            //_polygon.Fill = true;
+            //_polygon.FillColor = Color.Red;
         }
 
         public void OnDrawCircleToggle(bool isToggled)
@@ -54,6 +59,11 @@ namespace BlazorLeaflet.Samples.Data
             _map.RemoveLayer(_circle);
             _drawState = DrawState.DrawingCircle;
             OnDrawToggle(isToggled);
+        }
+
+        internal void AddPolyLine(List<LatLng> path)
+        {
+            
         }
 
         public void OnDrawRectangleToggle(bool isToggled)
