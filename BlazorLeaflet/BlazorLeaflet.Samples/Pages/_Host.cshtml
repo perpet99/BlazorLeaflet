@@ -21,11 +21,18 @@
 
     <script src="_content/BlazorLeaflet/leafletBlazorInterops.js"></script>
 
+
+    <link rel="stylesheet" href="_content/Radzen.Blazor/css/default.css">
+
 </head>
 <body>
     <app>
         @(await Html.RenderComponentAsync<App>(RenderMode.ServerPrerendered))
     </app>
+
+
+    <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+
 
     <script src="_framework/blazor.server.js"></script>
 </body>

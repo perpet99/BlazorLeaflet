@@ -12,6 +12,7 @@ using BlazorLeaflet.Models;
 using System.IO;
 using BlazorLeaflet.Samples.Data;
 using BlazorLeaflet.Models.Events;
+using Radzen;
 
 namespace BlazorLeaflet.Samples.Pages
 {
@@ -101,7 +102,7 @@ namespace BlazorLeaflet.Samples.Pages
                 Draggable = true,
                 Title = "Marker 1",
                 Popup = new Popup { Content = string.Format("I am at {0:0.00}° lat, {1:0.00}° lng", latLng.Lat, latLng.Lng) },
-                Tooltip = new Tooltip { Content = "Click and drag to move me" }
+                Tooltip = new BlazorLeaflet.Models.Tooltip { Content = "Click and drag to move me" }
             };
 
             mi.marker.OnMove += OnDrag;
@@ -136,6 +137,55 @@ namespace BlazorLeaflet.Samples.Pages
             marker.Popup.Content = string.Format("I am now at {0:0.00}° lat, {1:0.00}° lng", _markerLatLng.Lat, _markerLatLng.Lng);
             await LeafletInterops.UpdatePopupContent(jsRuntime, _map.Id, marker);
         }
+
+
+        DateTime RadzenDatePickerValue = DateTime.Now;
+
+        void DateRenderSpecial(DateRenderEventArgs args)
+        {
+            //if (ForecastService.GetRecordFileInfoByDate(args.Date) != null)
+            {
+                args.Attributes.Add("style", "background-color: #ff6d41; border-color: white;");
+            }
+        }
+
+        void RadzenDatePickerOnChange(DateTime? value, string name, string format)
+        {
+
+
+            //timeValue = value.Value;
+            //_dayinfoList = recordFileInfos.GetTimeRecordFile24(value.Value);
+
+            //ListBoxItems.Clear();
+
+            //ListBoxItems = _dayinfoList.Select(item => item.index.ToString()).ToList();
+
+        }
+
+        string ListBoxValue;
+        List<string> ListBoxItems = new List<string>();
+
+
+        async Task ListBoxOnChange(object value, string message)
+        {
+            //SelectDate = DateTime.Parse(value.ToString());
+
+            //var f = _dayinfoList.FirstOrDefault(item => item.index == SelectDate);
+            //if (f == null)
+            //    return;
+
+            //TimeRecordFiles = f.FileList;
+
+            //await StartPlay(0, true);
+
+
+
+            //await jsRuntime.InvokeVoidAsync("tttt", "JS function called from .NET");
+            //await jsRuntime.InvokeVoidAsync("loadVideo", "id1");
+            //StateHasChanged();
+
+        }
+
     }
 }
 

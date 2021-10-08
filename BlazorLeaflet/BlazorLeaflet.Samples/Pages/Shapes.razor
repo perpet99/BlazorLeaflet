@@ -2,6 +2,9 @@
 
 @using BlazorLeaflet.Models
 @using BlazorLeaflet.Models.Events
+@using Radzen.Blazor;
+
+
 @inject IJSRuntime jsRuntime
 
 <h1>Blazor Leaflet </h1>
@@ -24,6 +27,12 @@
     <LeafletMap Map="_map" />
 </div>
 
+
+<RadzenDatePicker @bind-Value=@RadzenDatePickerValue DateRender=@DateRenderSpecial Change=@(args => RadzenDatePickerOnChange(args, "DatePicker with special dates", "MM/dd/yyyy")) />
+
+<RadzenListBox @bind-Value=@ListBoxValue Data=@ListBoxItems TextProperty="CompanyName" ValueProperty="CustomerID" Style="height:200px" Change=@(args => ListBoxOnChange(args, "ListBox")) />
+
+
 <div class="pt-3">
     <DrawZoneToggleButton ButtonText="Draw Rectangle" DrawHandler="_drawHandler" OnToggleCallback="_drawHandler.OnDrawRectangleToggle" />
     <DrawZoneToggleButton ButtonText="Draw Circle" DrawHandler="_drawHandler" OnToggleCallback="_drawHandler.OnDrawCircleToggle" />
@@ -32,5 +41,5 @@
 
 @code
 {
-    
+
 }

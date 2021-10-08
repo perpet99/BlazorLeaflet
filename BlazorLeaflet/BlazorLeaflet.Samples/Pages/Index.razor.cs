@@ -34,8 +34,53 @@ namespace BlazorLeaflet.Samples.Pages
 
         private Circle _circle;
 
+
+        void dbtest()
+        {
+            using (var db = new  Models.teslamateContext())
+            {
+                var end = DateTime.Now;
+                var start = end.AddDays(-30);
+
+                var r = db.Positions.Where(item => start < item.Date && item.Date < end );
+
+
+                Console.WriteLine(r.Count().ToString());
+
+                foreach (var item in r)
+                {
+                    
+                }
+                //파일을 읽어들이고
+                //날짜 기준으로 정리하고 
+                //해당 날짜기준 1분 경로를 링크를 걸고 저장
+
+                //
+
+
+
+                //// Creating a new item and saving it to the database
+                //var newItem = new Item();
+                //newItem.Name = "Red Apple";
+                //newItem.Description = "Description of red apple";
+                //db.Item.Add(newItem);
+                //var count = db.SaveChanges();
+                //Console.WriteLine("{0} records saved to database", count);
+                //// Retrieving and displaying data
+                //Console.WriteLine();
+                //Console.WriteLine("All items in the database:");
+                //foreach (var item in db.Item)
+                //{
+                //    Console.WriteLine("{0} | {1}", item.Name, item.Description);
+                //}
+            }
+        }
+
         protected override void OnInitialized()
         {
+
+            dbtest();
+
             _map = new Map(jsRuntime)
             {
                 Center = _startAt,
@@ -62,7 +107,7 @@ namespace BlazorLeaflet.Samples.Pages
                     }
                 });
 
-                _map.AddLayer(new Models.Rectangle
+                _map.AddLayer(new BlazorLeaflet.Models.Rectangle
                 {
                     Shape = new RectangleF(10f, 0f, 5f, 1f)
                 });
