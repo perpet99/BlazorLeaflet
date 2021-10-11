@@ -35,6 +35,19 @@ namespace BlazorLeaflet.Samples.Data
             //throw new NotImplementedException();
         }
 
+        public bool Contains(DateTime date)
+        {
+            foreach (var item in _CamFileInfosWithPositon)
+            {
+                if( date.Year == item.Date.Year 
+                    &&  date.Month == item.Date.Month
+                    && date.Day == item.Date.Day)
+                    return true;
+            }
+
+            return false;
+        }
+
         internal List<CamFileInfo> LoadFile()
         {
             return new List<CamFileInfo>();
@@ -77,6 +90,26 @@ namespace BlazorLeaflet.Samples.Data
             }
 
             return _PosInfos;
+        }
+
+        internal List<CamFileInfo> GetListByDate(DateTime date)
+        {
+            var list = new List<CamFileInfo>();
+
+            foreach (var item in _CamFileInfosWithPositon)
+            {
+                if (date.Year == item.Date.Year
+                    && date.Month == item.Date.Month
+                    && date.Day == item.Date.Day)
+                {
+                    list.Add(item);
+                    //if( list.Contains(item.Date.ToString()) == false)
+                    //    list.Add(item.Date.ToString());
+                }
+                    
+            }
+
+            return list;
         }
     }
 }
