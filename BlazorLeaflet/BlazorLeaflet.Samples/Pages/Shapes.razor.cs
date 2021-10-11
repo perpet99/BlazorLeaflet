@@ -34,9 +34,86 @@ namespace BlazorLeaflet.Samples.Pages
 
         List<Polyline> _polyLines = new List<Polyline>();
 
+        void dbtest()
+        {
+
+            DataManager.I.Init();
+
+
+            // 파일로드해서 최신 정보있는지 확인한다.
+            var flist = DataManager.I.LoadFile();
+            var c = new CamFileInfo();
+            c.Date = new DateTime(2021, 10, 10, 12, 0, 0);
+
+            flist.Add(c);
+
+            using (var db = new Models.teslamateContext())
+            {
+
+                foreach (var item in flist)
+                {
+                    var end = c.Date;
+
+                    var start = end.AddMinutes(-10);
+
+                    var r = db.Positions.Where(item => start < item.Date && item.Date < end).OrderByDescending(item => item.Date).Take(2);
+
+                    if (r.Count() == 0)
+                    {
+                        break;
+                    }
+
+                    int count = 0;
+                    foreach (var item2 in r)
+                    {
+                        LatLng latLng = new LatLng();
+                        latLng.Lat = (float)item2.Latitude;
+                        latLng.Lng = (float)item2.Longitude;
+
+                        item.AddLatLng(latLng);
+                        if (++count == 2)
+                        {
+                            break;
+                        }
+
+                    }
+
+                    //Console.WriteLine(r.Count().ToString());
+
+
+                }
+
+                DataManager.I.SaveFile(flist);
+
+                //파일을 읽어들이고
+                //날짜 기준으로 정리하고 
+                //해당 날짜기준 1분 경로를 링크를 걸고 저장
+
+                //
+                //// Creating a new item and saving it to the database
+                //var newItem = new Item();
+                //newItem.Name = "Red Apple";
+                //newItem.Description = "Description of red apple";
+                //db.Item.Add(newItem);
+                //var count = db.SaveChanges();
+                //Console.WriteLine("{0} records saved to database", count);
+                //// Retrieving and displaying data
+                //Console.WriteLine();
+                //Console.WriteLine("All items in the database:");
+                //foreach (var item in db.Item)
+                //{
+                //    Console.WriteLine("{0} | {1}", item.Name, item.Description);
+                //}
+            }
+
+
+
+        }
+
+
         protected override void OnInitialized()
         {
-           
+            dbtest();
 
             _map = new Map(jsRuntime)
             {
@@ -52,7 +129,13 @@ namespace BlazorLeaflet.Samples.Pages
                     Attribution = "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
                 });
 
-               
+                var list = DataManager.I.GetPosList(0);
+
+                foreach (var item in list)
+                {
+                    AddMarket(item);
+                }
+
             };
 
             _map.OnClick += _map_OnClick;

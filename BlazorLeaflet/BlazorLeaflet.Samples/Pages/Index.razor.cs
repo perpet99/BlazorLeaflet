@@ -35,51 +35,11 @@ namespace BlazorLeaflet.Samples.Pages
         private Circle _circle;
 
 
-        void dbtest()
-        {
-            using (var db = new  Models.teslamateContext())
-            {
-                var end = DateTime.Now;
-                var start = end.AddDays(-30);
-
-                var r = db.Positions.Where(item => start < item.Date && item.Date < end );
-
-
-                Console.WriteLine(r.Count().ToString());
-
-                foreach (var item in r)
-                {
-                    
-                }
-                //파일을 읽어들이고
-                //날짜 기준으로 정리하고 
-                //해당 날짜기준 1분 경로를 링크를 걸고 저장
-
-                //
-
-
-
-                //// Creating a new item and saving it to the database
-                //var newItem = new Item();
-                //newItem.Name = "Red Apple";
-                //newItem.Description = "Description of red apple";
-                //db.Item.Add(newItem);
-                //var count = db.SaveChanges();
-                //Console.WriteLine("{0} records saved to database", count);
-                //// Retrieving and displaying data
-                //Console.WriteLine();
-                //Console.WriteLine("All items in the database:");
-                //foreach (var item in db.Item)
-                //{
-                //    Console.WriteLine("{0} | {1}", item.Name, item.Description);
-                //}
-            }
-        }
-
+       
         protected override void OnInitialized()
         {
 
-            dbtest();
+            
 
             _map = new Map(jsRuntime)
             {
@@ -94,6 +54,9 @@ namespace BlazorLeaflet.Samples.Pages
                     UrlTemplate = "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
                     Attribution = "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
                 });
+
+
+                //_map.RemoveLayer(new TileLayer);
 
                 _map.AddLayer(new Polygon
                 {
