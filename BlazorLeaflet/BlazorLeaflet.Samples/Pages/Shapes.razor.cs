@@ -29,6 +29,8 @@ namespace BlazorLeaflet.Samples.Pages
             public Marker marker;
         }
 
+        
+
 
         List<MarkerInfo> _MarkerList = new List<MarkerInfo>();
 

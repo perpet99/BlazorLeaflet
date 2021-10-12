@@ -5,23 +5,9 @@
 @using Radzen.Blazor;
 
 
-@inject IJSRuntime jsRuntime
+
 
 <h1>Blazor Leaflet </h1>
-
-<h3>Drag &amp; drop the Marker!</h3>
-
-<div class="form-inline m-2">
-    <div class="form-group mb-2">
-        <label>Lat </label>
-        <input class="form-control ml-2 mr-2" placeholder="city name" @bind="_markerLatLng.Lat" disabled />
-    </div>
-
-    <div class="form-group mb-2">
-        <label>Lng </label>
-        <input class="form-control ml-2 mr-2" placeholder="city name" @bind="_markerLatLng.Lng" disabled />
-    </div>
-</div>
 
 <div style="height: 500px; width: 500px;">
     <LeafletMap Map="_map" />
@@ -33,12 +19,12 @@
 <RadzenListBox @bind-Value=@ListBoxValue Data=@ListBoxItems TextProperty="CompanyName" ValueProperty="CustomerID" Style="height:200px" Change=@(args => ListBoxOnChange(args, "ListBox")) />
 
 
-<div class="pt-3">
+@*<div class="pt-3">
     <DrawZoneToggleButton ButtonText="Draw Rectangle" DrawHandler="_drawHandler" OnToggleCallback="_drawHandler.OnDrawRectangleToggle" />
     <DrawZoneToggleButton ButtonText="Draw Circle" DrawHandler="_drawHandler" OnToggleCallback="_drawHandler.OnDrawCircleToggle" />
     <DrawZoneToggleButton ButtonText="Draw Polygon" DrawHandler="_drawHandler" OnToggleCallback="_drawHandler.OnDrawPolygonToggle" />
 </div>
-
+*@
 @code
 {
 

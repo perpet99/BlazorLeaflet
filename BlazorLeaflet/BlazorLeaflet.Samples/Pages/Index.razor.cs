@@ -13,6 +13,7 @@ using System.IO;
 using BlazorLeaflet.Samples.Data;
 using BlazorLeaflet.Models.Events;
 using Radzen;
+using System.Reflection;
 
 namespace BlazorLeaflet.Samples.Pages
 {
@@ -29,6 +30,8 @@ namespace BlazorLeaflet.Samples.Pages
             public Marker marker;
         }
 
+        [Inject]
+        IJSRuntime jsRuntime { get; set; }
 
         List<MarkerInfo> _MarkerList = new List<MarkerInfo>();
 
@@ -211,8 +214,12 @@ namespace BlazorLeaflet.Samples.Pages
 
         //https://github.com/pointhi/leaflet-color-markers
 
-        private MarkerInfo AddMarker(string title,LatLng latLng)
+        private MarkerInfo AddMarker(CamFileInfo item ,bool colorBlue = true)
         {
+            var title = item.Date.ToString();
+
+            LatLng latLng = item._LatLngs[0];
+
 
             var mi = new MarkerInfo();
 
@@ -220,12 +227,15 @@ namespace BlazorLeaflet.Samples.Pages
             {
                 Draggable = false,
                 Title = "Marker 1",
-                Popup = new Popup { Content = title },
-                Tooltip = new BlazorLeaflet.Models.Tooltip { Content = "Click and drag to move me" }
+                //Popup = new Popup { Content = title},
+                Tooltip = new BlazorLeaflet.Models.Tooltip { Content = title }
                 
             };
             
-            mi.marker.Icon = new BlazorLeaflet.Models.Icon { Url = "/img/marker-icon-blue.png", Anchor = new Point(13,41) };
+            if(colorBlue)
+                mi.marker.Icon = new BlazorLeaflet.Models.Icon { Url = "/img/marker-icon-blue.png", Anchor = new Point(13,41) };
+            else
+                mi.marker.Icon = new BlazorLeaflet.Models.Icon { Url = "/img/marker-icon-red.png", Anchor = new Point(13, 41) };
 
             mi.marker.OnMove += OnDrag;
             mi.marker.OnMoveEnd += OnDragEnd;
@@ -238,6 +248,8 @@ namespace BlazorLeaflet.Samples.Pages
             return mi;
         }
 
+        DayItemInfo CurSel = null;
+
         private void Marker_OnClick(InteractiveLayer sender, MouseEvent e)
         {
             var sel = _days.FirstOrDefault(item => item.Marker.marker == sender);
@@ -246,14 +258,53 @@ namespace BlazorLeaflet.Samples.Pages
 
             ListBoxValue = sel.Item.Date.ToString();
 
+            SelectItem(sel);
+           
+        }
+
+        private void SelectItem(DayItemInfo sel)
+        {
             _map.RemoveLayer(sel.Marker.marker);
-            _map.AddLayer(sel.Marker.marker);
 
-            //sel.Marker.marker.Icon = 
+            AddMarker(sel.Item, false);
 
-            sel.Marker.marker.Icon = new BlazorLeaflet.Models.Icon { Url = "/img/marker-icon-red.png", Anchor = new Point(13, 41) };
+            if (CurSel != null)
+            {
+                _map.RemoveLayer(CurSel.Marker.marker);
+                AddMarker(CurSel.Item);
+            }
+
+            CurSel = sel;
 
             StateHasChanged();
+        }
+
+        async Task ListBoxOnChange(object value, string message)
+{
+
+            var sel = _days.FirstOrDefault(item => item.Item.Date.ToString() == value.ToString());
+
+            if (sel == null) return;
+
+
+            SelectItem(sel);
+
+            //SelectDate = DateTime.Parse(value.ToString());
+
+            //var f = _dayinfoList.FirstOrDefault(item => item.index == SelectDate);
+            //if (f == null)
+            //    return;
+
+            //TimeRecordFiles = f.FileList;
+
+            //await StartPlay(0, true);
+
+
+
+            //await jsRuntime.InvokeVoidAsync("tttt", "JS function called from .NET");
+            //await jsRuntime.InvokeVoidAsync("loadVideo", "id1");
+            //StateHasChanged();
+
         }
 
         private void OnDrag(Marker marker, DragEvent evt)
@@ -310,7 +361,7 @@ namespace BlazorLeaflet.Samples.Pages
 
                 ListBoxItems.Add(item.Date.ToString());
                 di.Item = item;
-                di.Marker = AddMarker(item.Date.ToString(),item._LatLngs[0]);
+                di.Marker = AddMarker(item);
 
                 AddLine(item._LatLngs);
             }
@@ -333,25 +384,6 @@ namespace BlazorLeaflet.Samples.Pages
         List<string> ListBoxItems = new List<string>();
 
 
-        async Task ListBoxOnChange(object value, string message)
-        {
-            //SelectDate = DateTime.Parse(value.ToString());
-
-            //var f = _dayinfoList.FirstOrDefault(item => item.index == SelectDate);
-            //if (f == null)
-            //    return;
-
-            //TimeRecordFiles = f.FileList;
-
-            //await StartPlay(0, true);
-
-
-
-            //await jsRuntime.InvokeVoidAsync("tttt", "JS function called from .NET");
-            //await jsRuntime.InvokeVoidAsync("loadVideo", "id1");
-            //StateHasChanged();
-
-        }
 
     }
 }
