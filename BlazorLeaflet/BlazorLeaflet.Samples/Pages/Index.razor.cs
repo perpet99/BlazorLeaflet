@@ -93,6 +93,12 @@ namespace BlazorLeaflet.Samples.Pages
 
                 DataManager.I.SaveFile(flist);
 
+                
+                //test code
+                DataManager.I.UpdateIndex(DataManager.I._CamFileInfosWithPositon);
+
+
+
                 //파일을 읽어들이고
                 //날짜 기준으로 정리하고 
                 //해당 날짜기준 1분 경로를 링크를 걸고 저장
@@ -156,50 +162,60 @@ namespace BlazorLeaflet.Samples.Pages
             _map.OnZoomLevelsChange += _map_OnZoomLevelsChange;
             _map.OnZoomEnd += _map_OnZoomEnd;
             _drawHandler = new DrawHandler(_map, jsRuntime);
+            _map.OnMoveEnd += _map_OnMoveEnd;
+
+        }
+
+        private async void _map_OnMoveEnd(object sender, Event e)
+        {
+            await UpdateMarker();
 
 
         }
 
-        
+
         //줌 단계별로 아이콘 보이기
         private async void _map_OnZoomEnd(object sender, Event e)
         {
-            var r = await _map.GetZoom();
             
 
+            await UpdateMarker();
 
-            if( 20 < r)
-            {
+            //if( 20 < r)
+            //{
 
-            }else if( 18 < r)
-            {
+            //}else if( 18 < r)
+            //{
 
-            }
-            else if (14 < r)
-            {
+            //}
+            //else if (14 < r)
+            //{
 
-            }
-            else if (10 < r)
-            {
+            //}
+            //else if (10 < r)
+            //{
 
-            }
-            else if (5 < r)
-            {
+            //}
+            //else if (5 < r)
+            //{
 
-            }
-            else 
-            {
+            //}
+            //else 
+            //{
 
-            }
+            //}
 
 
-            Console.WriteLine(r.ToString());
 
-            Console.WriteLine(_map.Zoom.ToString());
+            //Console.WriteLine(r.ToString());
+
+
+            //Console.WriteLine(_map.Zoom.ToString());
         }
 
-        private void _map_OnZoomLevelsChange(object sender, Event e)
+        private async void _map_OnZoomLevelsChange(object sender, Event e)
         {
+            await UpdateMarker();
             Console.WriteLine(_map.Zoom.ToString());
         }
 
@@ -385,13 +401,20 @@ namespace BlazorLeaflet.Samples.Pages
 
         int _CurLOD = -1;
 
-        void UpdateMarker(int lod)
+        async Task UpdateMarker()
         {
-            if (_CurLOD == lod)
-                return;
             _map.ClearLayer();
 
+            var z = await _map.GetZoom();
 
+            var center = await _map.GetCenter();
+
+            var r = DataManager.I.GetListByLevel(25 -(int)z,  center );
+
+            foreach (var item in r)
+            {
+                AddMarker( item);
+            }
         }
 
         void RadzenDatePickerOnChange(DateTime? value, string name, string format)

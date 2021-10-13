@@ -1,4 +1,5 @@
 ﻿using BlazorLeaflet.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,9 +31,28 @@ namespace BlazorLeaflet.Samples.Data
     {
         public static DataManager I = new DataManager();
 
+        
+
+
+        //void RecusiveAddKey(string key,int count)
+        //{
+        //    if (count-- == 0)
+        //        return;
+
+        //    for (int i = 1; i <= 4; i++)
+        //    {
+        //        _KeyList.Add(key + i.ToString(), 0);
+        //        RecusiveAddKey(key + i, count);
+        //    }
+
+        //}
+
         internal void Init()
         {
             //throw new NotImplementedException();
+
+            // make grid
+            //RecusiveAddKey("",24);
         }
 
         public bool Contains(DateTime date)
@@ -90,6 +110,73 @@ namespace BlazorLeaflet.Samples.Data
             }
 
             return _PosInfos;
+        }
+
+        Dictionary<string, List<CamFileInfo>> _KeyList = new Dictionary<string, List<CamFileInfo>>();
+
+        internal void UpdateIndex(List<CamFileInfo> list)
+        {
+            for (int i = 1; i <= 9; i++)
+            {
+                foreach (var item in list)
+                {
+                    AddOrUpdateIndex(i, item);
+                }
+                
+            }
+        }
+
+
+        public List<CamFileInfo> GetListByLevel(int index,LatLng center)
+        {
+            if (9 < index) index = 9;
+
+            int xindex = (int)center.Lng / index;
+            int yindex = (int)center.Lat / index;
+
+            List < CamFileInfo > result = new List<CamFileInfo>();
+            경계선 넘김처리
+            for (int x = xindex - 3; x < xindex + 3; x++)
+            {
+                for (int  y = yindex - 3; y < yindex + 3; y++)
+                {
+                    var key = $"{index},{x},{y}";
+
+                    if (_KeyList.TryGetValue(key, out List<CamFileInfo> list))
+                    {
+                        // 루트면 리스트 추가
+                        if(index == 1)
+                        {
+                            result.AddRange( list );
+                        }else // 아니면 대표 아이콘 추가
+                        {
+                            var newItem = new CamFileInfo();
+                            newItem.AddLatLng( new LatLng( x*index, y*index));
+                            result.Add(newItem);
+                        }
+                    }
+
+                }
+
+            }
+            return result;
+        }
+
+        private void AddOrUpdateIndex(int i, CamFileInfo item)
+        {
+            //double div = Math.Pow((double)10,(double) i);
+            int xindex = (int)item._LatLngs[0].Lng / i;
+            int yindex = (int)item._LatLngs[0].Lat / i;
+
+            var key = $"{i},{xindex},{yindex}";
+
+            if(_KeyList.TryGetValue(key, out List<CamFileInfo> list) ==false)
+            {
+                list = new List<CamFileInfo>();
+                _KeyList.Add(key, list);
+            }
+            list.Add(item);
+
         }
 
         internal List<CamFileInfo> GetListByDate(DateTime date)
