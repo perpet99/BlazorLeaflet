@@ -153,10 +153,54 @@ namespace BlazorLeaflet.Samples.Pages
             };
 
             _map.OnClick += _map_OnClick;
-
+            _map.OnZoomLevelsChange += _map_OnZoomLevelsChange;
+            _map.OnZoomEnd += _map_OnZoomEnd;
             _drawHandler = new DrawHandler(_map, jsRuntime);
 
 
+        }
+
+        
+        //줌 단계별로 아이콘 보이기
+        private async void _map_OnZoomEnd(object sender, Event e)
+        {
+            var r = await _map.GetZoom();
+            
+
+
+            if( 20 < r)
+            {
+
+            }else if( 18 < r)
+            {
+
+            }
+            else if (14 < r)
+            {
+
+            }
+            else if (10 < r)
+            {
+
+            }
+            else if (5 < r)
+            {
+
+            }
+            else 
+            {
+
+            }
+
+
+            Console.WriteLine(r.ToString());
+
+            Console.WriteLine(_map.Zoom.ToString());
+        }
+
+        private void _map_OnZoomLevelsChange(object sender, Event e)
+        {
+            Console.WriteLine(_map.Zoom.ToString());
         }
 
         private void AddLine(List<LatLng> latLngs)
@@ -338,6 +382,17 @@ namespace BlazorLeaflet.Samples.Pages
         }
 
         List<DayItemInfo> _days = new List<DayItemInfo>();
+
+        int _CurLOD = -1;
+
+        void UpdateMarker(int lod)
+        {
+            if (_CurLOD == lod)
+                return;
+            _map.ClearLayer();
+
+
+        }
 
         void RadzenDatePickerOnChange(DateTime? value, string name, string format)
         {
