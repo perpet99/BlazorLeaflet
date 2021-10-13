@@ -126,6 +126,13 @@ namespace BlazorLeaflet
             _layers.Remove(layer);
         }
 
+
+        public void ClearLayer()
+        {
+            _layers.Clear();
+        }
+
+
         /// <summary>
         /// Get a read only collection of the current layers.
         /// </summary>
