@@ -127,91 +127,51 @@ namespace BlazorLeaflet.Samples.Data
         }
 
 
+        
         public List<CamFileInfo> GetListByLevel(int index,LatLng center)
         {
             List<CamFileInfo> result = new List<CamFileInfo>();
 
-            if (15 < index)
+            if (index < 6 )
                 return result;
             //index = 9;
+            center.Lng = center.Lng % 180;
+            index = 19 - index;
+            GetsegmentIndex(index, center, out int ix, out int iy, out int sx, out int sy);
 
 
-            int cx = (int)center.Lng*1000000;
-            int cy = (int)center.Lat*1000000;
-            int segx;
-            int segy;
-            switch (index)
-            {
-                case 1:segx = 
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    break;
-                case 4:
-                    break;
-                case 5:
-                    break;
-                case 6:
-                    break;
-                case 7:
-                    break;
-                case 8:
-                    break;
-                case 9:
-                    break;
-                case 10:
-                    break;
-                case 11:
-                    break;
-                case 12:
-                    break;
-                case 13:
-                    break;
-                case 14:
-                    break;
-
-                default:
-                    break;
-            }
 
 
-            
-            
             //경계선 넘김처리
 
-            for (int x = center.Lng - 3; x < xindex + 3; x++)
+            for (int x = ix - 4; x < ix + 8; x++)
             {
-                for (int  y = yindex - 3; y < yindex + 3; y++)
+                for (int  y = iy - 6; y < iy + 6; y++)
                 {
                     var key = $"{index},{x},{y}";
 
                     if (_KeyList.TryGetValue(key, out List<CamFileInfo> list))
                     {
                         // 루트면 리스트 추가
-                        if(index == 1)
+                        if(index <= 4)
                         {
                             result.AddRange( list );
                         }else // 아니면 대표 아이콘 추가
                         {
                             var newItem = new CamFileInfo();
-                            var lng = x * index  <= 180 ? x * index : -360 + x * index;
-                            var lat =  y * index <= 90 ? y * index : 180 -(x * index);
-                            lat = -90 < lat ? lat : -180 - lat;
+                            var latlng = GetLatLngFromIndex(x,y,sx,sy);
 
-                            newItem.AddLatLng( new LatLng( lat,lng));
+                            newItem.AddLatLng(latlng);
                             result.Add(newItem);
                         }
                     }
                     else
                     {
-                        var newItem = new CamFileInfo();
-                        var lng = x * index <= 180 ? x * index : -360 + x * index;
-                        var lat = y * index <= 90 ? y * index : 180 - (x * index);
-                        lat = -90 < lat ? lat : -180 - lat;
+                        //var newItem = new CamFileInfo();
+                        //var latlng = GetLatLngFromIndex(x, y, sx, sy);
 
-                        newItem.AddLatLng(new LatLng(lat, lng));
-                        result.Add(newItem);
+                        //newItem.AddLatLng(latlng);
+                        //result.Add(newItem);
 
                     }
 
@@ -221,13 +181,98 @@ namespace BlazorLeaflet.Samples.Data
             return result;
         }
 
+        LatLng GetLatLngFromIndex(int x,int y,int sx,int sy)
+        {
+            var latlng = new LatLng(y / shift, x / shift);
+            var newItem = new CamFileInfo();
+            latlng.Lng = latlng.Lng * sx <= 180 ? latlng.Lng * sx : -360 + latlng.Lng * sx;
+            latlng.Lat = latlng.Lat * sy <= 90 ? latlng.Lat * sy : 180 - (latlng.Lat * sy);
+            latlng.Lat = -90 < latlng.Lat ? latlng.Lat : -180 - latlng.Lat;
+
+            return latlng;
+        }
+
+        void Getsegment(int index,out int sx,out int sy)
+        {
+            //sx = (int)Math.Pow(4, index);
+            //sy = (int)Math.Pow(4, index);
+
+            switch (index)
+            {
+                case 1:
+                    sx = 450; sy = 450;
+                    break;
+                case 2:
+                    sx = 900; sy = 900;
+                    break;
+                case 3:
+                    sx = 1800; sy = 1800;
+                    break;
+                case 4:
+                    sx = 3500; sy = 3500;
+                    break;
+                case 5:
+                    sx = 7000; sy = 7000;
+                    break;
+                case 6:
+                    sx = 14000; sy = 14000;
+                    break;
+                case 7:
+                    sx = 28000; sy = 28000;
+                    break;
+                case 8:
+                    sx = 56000; sy = 56000;
+                    break;
+                case 9:
+                    sx = 118000; sy = 118000;
+                    break;
+                case 10:
+                    sx = 204000; sy = 204000;
+                    break;
+                case 11:
+                    sx = 480000; sy = 480000;
+                    break;
+                case 12:
+                    sx = 840000; sy = 840000;
+                    break;
+                case 13:
+                    sx = 1800000; sy = 1800000;
+                    break;
+                case 14:
+                    sx = 5000000; sy = 5000000;
+                    break;
+                    
+                default:
+                    sx = 9000000; sy = 9000000;
+                    break;
+            }
+            sx /= 2;
+            sy /= 2;
+        }
+
+
+        void GetsegmentIndex(int index, LatLng latlng, out int ix, out int iy)
+        {
+            GetsegmentIndex( index,  latlng,out ix,out iy,out var sx,out var sy);
+        }
+        const float shift = 1000000;
+
+        void GetsegmentIndex(int index, LatLng latlng, out int ix, out int iy, out int sx, out int sy)
+        {
+            Getsegment(index,out sx,out sy);
+
+            ix = (int)(latlng.Lng * shift) /sy;
+            iy = (int)(latlng.Lat * shift) /sx;
+        }
+
+
         private void AddOrUpdateIndex(int i, CamFileInfo item)
         {
-            //double div = Math.Pow((double)10,(double) i);
-            int xindex = (int)item._LatLngs[0].Lng / i;
-            int yindex = (int)item._LatLngs[0].Lat / i;
 
-            var key = $"{i},{xindex},{yindex}";
+            GetsegmentIndex(i, item._LatLngs[0],out var sx, out var sy);
+
+
+            var key = $"{i},{sx},{sy}";
 
             if(_KeyList.TryGetValue(key, out List<CamFileInfo> list) ==false)
             {

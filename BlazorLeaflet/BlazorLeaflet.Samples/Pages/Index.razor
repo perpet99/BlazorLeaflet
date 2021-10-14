@@ -9,11 +9,17 @@
 
 <h1>Blazor Leaflet </h1>
 
-<div style="height: 500px; width: 500px;">
+<div style="height: 500px; width: 1000px;">
     <LeafletMap Map="_map" />
 </div>
-
-
+@*<style> 
+    .flex-container { 
+        display: flex; 
+        height: 500px; 
+        width: 700px;         
+    } 
+</style> 
+*@
 <RadzenDatePicker @bind-Value=@RadzenDatePickerValue DateRender=@DateRenderSpecial Change=@(args => RadzenDatePickerOnChange(args, "DatePicker with special dates", "MM/dd/yyyy")) />
 
 <RadzenListBox @bind-Value=@ListBoxValue Data=@ListBoxItems TextProperty="CompanyName" ValueProperty="CustomerID" Style="height:200px" Change=@(args => ListBoxOnChange(args, "ListBox")) />

@@ -129,7 +129,14 @@ namespace BlazorLeaflet
 
         public void ClearLayer()
         {
-            _layers.Clear();
+            foreach (var item in GetLayers())
+            {
+                if( item is Marker)
+                {
+                    _layers.Remove(item);
+                }
+            }
+            
         }
 
 
