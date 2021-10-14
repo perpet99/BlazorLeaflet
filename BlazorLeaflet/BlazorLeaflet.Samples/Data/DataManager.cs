@@ -129,14 +129,58 @@ namespace BlazorLeaflet.Samples.Data
 
         public List<CamFileInfo> GetListByLevel(int index,LatLng center)
         {
-            if (9 < index) index = 9;
+            List<CamFileInfo> result = new List<CamFileInfo>();
 
-            int xindex = (int)center.Lng / index;
-            int yindex = (int)center.Lat / index;
+            if (15 < index)
+                return result;
+            //index = 9;
 
-            List < CamFileInfo > result = new List<CamFileInfo>();
-            경계선 넘김처리
-            for (int x = xindex - 3; x < xindex + 3; x++)
+
+            int cx = (int)center.Lng*1000000;
+            int cy = (int)center.Lat*1000000;
+            int segx;
+            int segy;
+            switch (index)
+            {
+                case 1:segx = 
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    break;
+                case 7:
+                    break;
+                case 8:
+                    break;
+                case 9:
+                    break;
+                case 10:
+                    break;
+                case 11:
+                    break;
+                case 12:
+                    break;
+                case 13:
+                    break;
+                case 14:
+                    break;
+
+                default:
+                    break;
+            }
+
+
+            
+            
+            //경계선 넘김처리
+
+            for (int x = center.Lng - 3; x < xindex + 3; x++)
             {
                 for (int  y = yindex - 3; y < yindex + 3; y++)
                 {
@@ -151,9 +195,24 @@ namespace BlazorLeaflet.Samples.Data
                         }else // 아니면 대표 아이콘 추가
                         {
                             var newItem = new CamFileInfo();
-                            newItem.AddLatLng( new LatLng( x*index, y*index));
+                            var lng = x * index  <= 180 ? x * index : -360 + x * index;
+                            var lat =  y * index <= 90 ? y * index : 180 -(x * index);
+                            lat = -90 < lat ? lat : -180 - lat;
+
+                            newItem.AddLatLng( new LatLng( lat,lng));
                             result.Add(newItem);
                         }
+                    }
+                    else
+                    {
+                        var newItem = new CamFileInfo();
+                        var lng = x * index <= 180 ? x * index : -360 + x * index;
+                        var lat = y * index <= 90 ? y * index : 180 - (x * index);
+                        lat = -90 < lat ? lat : -180 - lat;
+
+                        newItem.AddLatLng(new LatLng(lat, lng));
+                        result.Add(newItem);
+
                     }
 
                 }

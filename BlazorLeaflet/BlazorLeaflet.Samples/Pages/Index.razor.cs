@@ -46,7 +46,7 @@ namespace BlazorLeaflet.Samples.Pages
             // 파일로드해서 최신 정보있는지 확인한다.
             var flist = DataManager.I.LoadFile();
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 1; i++)
             {
                 var c = new CamFileInfo();
                 c.Date = new DateTime(2021, 10, 10, 12, i, 0);
@@ -68,6 +68,15 @@ namespace BlazorLeaflet.Samples.Pages
 
                     if (r.Count() == 0)
                     {
+                        //37.4039371,126.9652799,14.25z
+                        // 임시코드
+                        LatLng latLng = new LatLng();
+                        latLng.Lat = 37.4039371f;
+                        latLng.Lng = 126.9652799f;
+
+                        item.AddLatLng(latLng);
+
+
                         break;
                     }
 
@@ -286,7 +295,7 @@ namespace BlazorLeaflet.Samples.Pages
             mi.marker = new Marker(latLng)
             {
                 Draggable = false,
-                Title = "Marker 1",
+                Title = $"{latLng.Lat},{latLng.Lng}",
                 //Popup = new Popup { Content = title},
                 Tooltip = new BlazorLeaflet.Models.Tooltip { Content = title }
                 
@@ -307,6 +316,9 @@ namespace BlazorLeaflet.Samples.Pages
 
             return mi;
         }
+
+        
+
 
         DayItemInfo CurSel = null;
 
@@ -409,7 +421,7 @@ namespace BlazorLeaflet.Samples.Pages
 
             var center = await _map.GetCenter();
 
-            var r = DataManager.I.GetListByLevel(25 -(int)z,  center );
+            var r = DataManager.I.GetListByLevel((int)z,  center );
 
             foreach (var item in r)
             {
