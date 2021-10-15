@@ -415,6 +415,8 @@ namespace BlazorLeaflet.Samples.Pages
 
         async Task UpdateMarker()
         {
+            return; // 임시 삭제
+
             _map.ClearLayer();
 
             var z = await _map.GetZoom();

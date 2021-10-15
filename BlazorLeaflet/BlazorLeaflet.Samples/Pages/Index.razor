@@ -20,9 +20,11 @@
     } 
 </style> 
 *@
-<RadzenDatePicker @bind-Value=@RadzenDatePickerValue DateRender=@DateRenderSpecial Change=@(args => RadzenDatePickerOnChange(args, "DatePicker with special dates", "MM/dd/yyyy")) />
+<div>
+<RadzenDatePicker Style="width: 300px;" @bind-Value=@RadzenDatePickerValue DateRender=@DateRenderSpecial Change=@(args => RadzenDatePickerOnChange(args, "DatePicker with special dates", "MM/dd/yyyy")) />
+</div>
 
-<RadzenListBox @bind-Value=@ListBoxValue Data=@ListBoxItems TextProperty="CompanyName" ValueProperty="CustomerID" Style="height:200px" Change=@(args => ListBoxOnChange(args, "ListBox")) />
+<RadzenListBox @bind-Value=@ListBoxValue Data=@ListBoxItems TextProperty="CompanyName" ValueProperty="CustomerID" Style="width: 300px;height:400px" Change=@(args => ListBoxOnChange(args, "ListBox")) />
 
 
 @*<div class="pt-3">
